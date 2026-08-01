@@ -61,7 +61,7 @@ export default function CategoryChart({ data, total, loading }: Props) {
       </div>
 
       <div className="p-6">
-        <div className="flex flex-col sm:flex-row items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
           <div className="w-48 h-48 flex-shrink-0">
             <Chart
               type="doughnut"
@@ -95,21 +95,23 @@ export default function CategoryChart({ data, total, loading }: Props) {
             {data.map((item, i) => {
               const pct = total > 0 ? ((item.total / total) * 100).toFixed(1) : 0;
               return (
-                <div key={item._id} className="flex items-center gap-3">
+                <div key={item._id} className="grid grid-cols-[12px_1fr_auto_auto] items-center gap-x-3 gap-y-0.5">
                   <div
-                    className="w-3 h-3 rounded-full flex-shrink-0"
+                    className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: COLORS[i % COLORS.length] }}
                   />
-                  <span className="text-sm text-slate-600 flex-1 truncate">{item._id}</span>
-                  <span className="text-sm font-semibold text-slate-800 whitespace-nowrap flex-shrink-0">{formatCurrency(item.total)}</span>
-                  <span className="text-xs text-slate-400 w-12 text-right flex-shrink-0">{pct}%</span>
+                  <span className="text-sm text-slate-600 truncate">{item._id}</span>
+                  <span className="text-sm font-semibold text-slate-800 whitespace-nowrap">{formatCurrency(item.total)}</span>
+                  <span className="text-xs text-slate-400 text-right w-11">{pct}%</span>
                 </div>
               );
             })}
 
-            <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+            <div className="pt-2 mt-2 border-t border-slate-100 grid grid-cols-[12px_1fr_auto_auto] items-center gap-x-3">
+              <div />
               <span className="text-sm text-slate-400">Total</span>
-              <span className="text-sm font-bold text-slate-900 whitespace-nowrap flex-shrink-0">{formatCurrency(total)}</span>
+              <span className="text-sm font-bold text-slate-900 whitespace-nowrap">{formatCurrency(total)}</span>
+              <span />
             </div>
           </div>
         </div>

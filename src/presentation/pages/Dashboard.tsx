@@ -70,7 +70,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <SummaryCards totalExpense={totalExpense} totalIncome={totalIncome} count={expenses.length} />
+      <SummaryCards totalExpense={totalExpense} totalIncome={totalIncome} count={expenses.length} showIncome={false} />
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3">

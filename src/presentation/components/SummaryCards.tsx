@@ -2,6 +2,7 @@ interface Props {
   totalExpense: number;
   totalIncome: number;
   count: number;
+  showIncome?: boolean;
 }
 
 const formatCurrency = (n: number) =>
@@ -50,13 +51,15 @@ const cards = [
   },
 ];
 
-export default function SummaryCards({ totalExpense, totalIncome, count }: Props) {
+export default function SummaryCards({ totalExpense, totalIncome, count, showIncome = true }: Props) {
   const net = totalIncome - totalExpense;
   const values = { income: totalIncome, expense: totalExpense, net, count };
+  const visibleCards = showIncome ? cards : cards.filter((c) => c.key !== 'income');
+  const cols = showIncome ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {cards.map((card, i) => (
+    <div className={`grid grid-cols-1 sm:grid-cols-2 ${cols} gap-4`}>
+      {visibleCards.map((card, i) => (
         <div
           key={card.key}
           className={`animate-slide-up group relative overflow-hidden rounded-2xl bg-gradient-to-br ${card.gradient} p-5 text-white shadow-lg hover:shadow-xl transition-shadow duration-300`}
