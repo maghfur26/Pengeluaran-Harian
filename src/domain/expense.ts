@@ -63,3 +63,11 @@ export interface ApiResponse<T> {
   message?: string;
   count?: number;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface AuthResponse extends ApiResponse<{ token: string; user: User }> {}

@@ -101,15 +101,15 @@ export default function CategoryChart({ data, total, loading }: Props) {
                     style={{ backgroundColor: COLORS[i % COLORS.length] }}
                   />
                   <span className="text-sm text-slate-600 flex-1 truncate">{item._id}</span>
-                  <span className="text-sm font-semibold text-slate-800 whitespace-nowrap">{formatCurrency(item.total)}</span>
-                  <span className="text-xs text-slate-400 w-12 text-right">{pct}%</span>
+                  <span className="text-sm font-semibold text-slate-800 whitespace-nowrap flex-shrink-0">{formatCurrency(item.total)}</span>
+                  <span className="text-xs text-slate-400 w-12 text-right flex-shrink-0">{pct}%</span>
                 </div>
               );
             })}
 
-            <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between">
+            <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between gap-2">
               <span className="text-sm text-slate-400">Total</span>
-              <span className="text-sm font-bold text-slate-900">{formatCurrency(total)}</span>
+              <span className="text-sm font-bold text-slate-900 whitespace-nowrap flex-shrink-0">{formatCurrency(total)}</span>
             </div>
           </div>
         </div>
