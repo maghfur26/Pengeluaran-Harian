@@ -50,6 +50,23 @@ export interface CategorySummary {
   count: number;
 }
 
+export interface Income {
+  _id: string;
+  description: string;
+  amount: number;
+  date: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IncomeInput {
+  description: string;
+  amount: number;
+  date: string;
+  notes?: string;
+}
+
 export interface ExpenseFilter {
   category?: Category;
   startDate?: string;
@@ -68,6 +85,33 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  role?: 'user' | 'admin';
+}
+
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
+  lastActive?: string | null;
+  createdAt: string;
+  expenseCount: number;
+  expenseTotal: number;
+  incomeCount: number;
+  incomeTotal: number;
+}
+
+export interface UserInput {
+  name: string;
+  email: string;
+  password: string;
+  role: 'user' | 'admin';
+}
+
+export interface UserUpdateInput {
+  name?: string;
+  email?: string;
+  role?: 'user' | 'admin';
 }
 
 export interface AuthResponse extends ApiResponse<{ token: string; user: User }> {}
