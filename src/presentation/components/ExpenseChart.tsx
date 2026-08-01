@@ -163,12 +163,12 @@ export default function ExpenseChart({ monthlyData, dailyData, selectedMonth, on
               type="bar"
               data={selectedMonth ? dailyChartData : monthlyChartData}
               options={sharedOptions as never}
-              onClick={selectedMonth ? undefined : ((_: never, elements: Array<{ index: number }>) => {
+              onClick={selectedMonth ? undefined : ((_: unknown, elements: Array<{ index: number }>) => {
                 if (elements.length > 0) {
                   const item = filteredMonthly[elements[0].index];
                   if (item) onSelectMonth(item.year, item.month);
                 }
-              })}
+              }) as never}
             />
           </div>
         )}
