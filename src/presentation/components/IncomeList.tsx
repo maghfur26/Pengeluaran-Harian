@@ -86,7 +86,7 @@ export default function IncomeList({ incomes, loading, onEdit, onDelete }: Props
                 </span>
                 <button
                   onClick={() => onEdit(inc)}
-                  className="btn-icon opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+                  className="btn-icon transition-opacity"
                   title="Edit"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -95,7 +95,7 @@ export default function IncomeList({ incomes, loading, onEdit, onDelete }: Props
                 </button>
                 <button
                   onClick={() => onDelete(inc._id)}
-                  className="btn-danger opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+                  className="btn-danger transition-opacity"
                   title="Hapus"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

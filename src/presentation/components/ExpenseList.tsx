@@ -229,7 +229,7 @@ export default function ExpenseList({ expenses, loading, filters, onFilterChange
                   </span>
                   <button
                     onClick={() => onEdit(e)}
-                    className="btn-icon opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+                    className="btn-icon transition-opacity"
                     title="Edit"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -238,7 +238,7 @@ export default function ExpenseList({ expenses, loading, filters, onFilterChange
                   </button>
                   <button
                     onClick={() => onDelete(e._id)}
-                    className="btn-danger opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+                    className="btn-danger transition-opacity"
                     title="Hapus"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
