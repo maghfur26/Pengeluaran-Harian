@@ -12,6 +12,12 @@ interface Props {
 
 const today = () => new Date().toISOString().split('T')[0];
 
+const formatAmountInput = (value: string): string => {
+  const digits = value.replace(/\D/g, '');
+  if (!digits) return '';
+  return Number(digits).toLocaleString('id-ID');
+};
+
 const CATEGORY_ICONS: Record<Category, string> = {
   Makanan: '🍽️',
   Transportasi: '🚗',
@@ -25,7 +31,7 @@ const CATEGORY_ICONS: Record<Category, string> = {
 
 export default function ExpenseForm({ isOpen, onSubmit, initial, onClose }: Props) {
   const [description, setDescription] = useState(initial?.description ?? '');
-  const [amount, setAmount] = useState(initial?.amount?.toString() ?? '');
+  const [amount, setAmount] = useState(initial?.amount ? formatAmountInput(String(initial.amount)) : '');
   const [category, setCategory] = useState<Category>(initial?.category ?? 'Makanan');
   const [date, setDate] = useState(initial?.date?.split('T')[0] ?? today());
   const [notes, setNotes] = useState(initial?.notes ?? '');
@@ -35,7 +41,7 @@ export default function ExpenseForm({ isOpen, onSubmit, initial, onClose }: Prop
   useEffect(() => {
     if (isOpen) {
       setDescription(initial?.description ?? '');
-      setAmount(initial?.amount?.toString() ?? '');
+      setAmount(initial?.amount ? formatAmountInput(String(initial.amount)) : '');
       setCategory(initial?.category ?? 'Makanan');
       setDate(initial?.date?.split('T')[0] ?? today());
       setNotes(initial?.notes ?? '');
@@ -59,7 +65,7 @@ export default function ExpenseForm({ isOpen, onSubmit, initial, onClose }: Prop
     try {
       await onSubmit({
         description: description.trim(),
-        amount: Number(amount),
+        amount: Number(amount.replace(/\D/g, '')),
         category,
         date,
         notes: notes.trim() || undefined,
@@ -109,11 +115,11 @@ export default function ExpenseForm({ isOpen, onSubmit, initial, onClose }: Prop
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400">Rp</span>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => setAmount(formatAmountInput(e.target.value))}
                 required
-                min={0}
                 placeholder="0"
                 className="input-field pl-10 text-lg font-semibold"
               />

@@ -136,6 +136,8 @@ export default function LoginPage() {
             </form>
           </div>
         </div>
+
+        <p className="text-center text-xs text-slate-400 mt-6">Created by Maghfur Hasani</p>
       </div>
     </div>
   );

@@ -134,6 +134,10 @@ export default function Dashboard() {
         />
       </main>
 
+      <footer className="max-w-5xl mx-auto px-4 sm:px-6 pb-8">
+        <p className="text-center text-xs text-slate-400">Created by Maghfur Hasani</p>
+      </footer>
+
       <ExpenseForm
         isOpen={showForm}
         onSubmit={handleSubmit}
