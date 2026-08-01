@@ -5,12 +5,13 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  BarController,
   Tooltip,
   Legend,
 } from 'chart.js';
 import type { MonthlyExpense, DailyExpense } from '../../domain/expense';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, BarController, Tooltip, Legend);
 
 interface Props {
   monthlyData: MonthlyExpense[];
