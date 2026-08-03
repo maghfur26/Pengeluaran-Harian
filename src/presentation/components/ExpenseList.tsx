@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Expense, Category, ExpenseFilter } from '../../domain/expense';
 import { CATEGORIES } from '../../domain/expense';
+import { todayDateString } from '../../utils/date';
 
 interface Props {
   expenses: Expense[];
@@ -45,12 +46,12 @@ function SkeletonCard() {
   );
 }
 
-function EmptyState({ hasFilters }: { hasFilters: boolean }) {
+function EmptyState({ hasFilters, isToday }: { hasFilters: boolean; isToday: boolean }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-6">
       <div className="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
         <svg className="w-10 h-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-          {hasFilters ? (
+          {hasFilters || isToday ? (
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           ) : (
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
@@ -58,10 +59,10 @@ function EmptyState({ hasFilters }: { hasFilters: boolean }) {
         </svg>
       </div>
       <p className="text-slate-500 font-medium">
-        {hasFilters ? 'Tidak ada hasil ditemukan' : 'Belum ada pengeluaran'}
+        {isToday ? 'Belum ada pengeluaran hari ini' : hasFilters ? 'Tidak ada hasil ditemukan' : 'Belum ada pengeluaran'}
       </p>
       <p className="text-sm text-slate-400 mt-1">
-        {hasFilters ? 'Coba ubah filter pencarianmu' : 'Mulai catat pengeluaranmu hari ini'}
+        {isToday ? 'Mulai catat pengeluaranmu hari ini' : hasFilters ? 'Coba ubah filter tanggal atau pencarianmu' : 'Mulai catat pengeluaranmu hari ini'}
       </p>
     </div>
   );
@@ -74,7 +75,19 @@ export default function ExpenseList({ expenses, loading, filters, onFilterChange
   const [endDate, setEndDate] = useState(filters.endDate ?? '');
   const [showFilters, setShowFilters] = useState(false);
 
-  const hasActiveFilters = Boolean(filters.category || filters.startDate || filters.endDate || filters.search);
+  useEffect(() => {
+    setSearch(filters.search ?? '');
+    setCategory(filters.category ?? '');
+    setStartDate(filters.startDate ?? '');
+    setEndDate(filters.endDate ?? '');
+  }, [filters]);
+
+  const isTodayView = filters.startDate === todayDateString() &&
+    filters.endDate === todayDateString() &&
+    !filters.category &&
+    !filters.search;
+
+  const hasActiveFilters = !isTodayView && Boolean(filters.category || filters.startDate || filters.endDate || filters.search);
 
   const handleSearch = () => {
     onFilterChange({
@@ -86,21 +99,29 @@ export default function ExpenseList({ expenses, loading, filters, onFilterChange
   };
 
   const handleClearFilters = () => {
+    const t = todayDateString();
     setSearch('');
     setCategory('');
-    setStartDate('');
-    setEndDate('');
-    onFilterChange({});
+    setStartDate(t);
+    setEndDate(t);
+    onFilterChange({ startDate: t, endDate: t });
   };
 
   const activeFilterCount = useMemo(() => {
+    if (isTodayView) return 0;
     let count = 0;
     if (filters.category) count++;
     if (filters.startDate) count++;
     if (filters.endDate) count++;
     if (filters.search) count++;
     return count;
-  }, [filters]);
+  }, [filters, isTodayView]);
+
+  const subtitle = isTodayView
+    ? `${expenses.length} transaksi hari ini`
+    : hasActiveFilters
+      ? `${expenses.length} hasil ditemukan`
+      : `${expenses.length} transaksi`;
 
   return (
     <div className="glass-strong rounded-2xl overflow-hidden">
@@ -109,9 +130,7 @@ export default function ExpenseList({ expenses, loading, filters, onFilterChange
           <div>
             <h2 className="font-bold text-slate-900">Riwayat Pengeluaran</h2>
             {expenses.length > 0 && (
-              <p className="text-sm text-slate-400 mt-0.5">
-                {hasActiveFilters ? `${expenses.length} hasil ditemukan` : `${expenses.length} transaksi`}
-              </p>
+              <p className="text-sm text-slate-400 mt-0.5">{subtitle}</p>
             )}
           </div>
           <button
@@ -125,7 +144,7 @@ export default function ExpenseList({ expenses, loading, filters, onFilterChange
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
             </svg>
-            Filter
+            {isTodayView ? 'Hari Ini' : 'Filter'}
             {activeFilterCount > 0 && (
               <span className="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">
                 {activeFilterCount}
@@ -196,7 +215,7 @@ export default function ExpenseList({ expenses, loading, filters, onFilterChange
       {loading ? (
         <SkeletonCard />
       ) : expenses.length === 0 ? (
-        <EmptyState hasFilters={hasActiveFilters} />
+        <EmptyState hasFilters={hasActiveFilters} isToday={isTodayView} />
       ) : (
         <div className="divide-y divide-slate-100">
           {expenses.map((e, i) => {

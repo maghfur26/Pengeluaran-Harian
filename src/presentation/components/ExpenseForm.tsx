@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import type { Expense, ExpenseInput, Category } from '../../domain/expense';
 import { CATEGORIES } from '../../domain/expense';
+import { todayDateString } from '../../utils/date';
 
 interface Props {
   isOpen: boolean;
@@ -9,8 +10,6 @@ interface Props {
   initial?: Expense | null;
   onClose: () => void;
 }
-
-const today = () => new Date().toISOString().split('T')[0];
 
 const formatAmountInput = (value: string): string => {
   const digits = value.replace(/\D/g, '');
@@ -33,7 +32,7 @@ export default function ExpenseForm({ isOpen, onSubmit, initial, onClose }: Prop
   const [description, setDescription] = useState(initial?.description ?? '');
   const [amount, setAmount] = useState(initial?.amount ? formatAmountInput(String(initial.amount)) : '');
   const [category, setCategory] = useState<Category>(initial?.category ?? 'Makanan');
-  const [date, setDate] = useState(initial?.date?.split('T')[0] ?? today());
+  const [date, setDate] = useState(initial?.date?.split('T')[0] ?? todayDateString());
   const [notes, setNotes] = useState(initial?.notes ?? '');
   const [submitting, setSubmitting] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -43,7 +42,7 @@ export default function ExpenseForm({ isOpen, onSubmit, initial, onClose }: Prop
       setDescription(initial?.description ?? '');
       setAmount(initial?.amount ? formatAmountInput(String(initial.amount)) : '');
       setCategory(initial?.category ?? 'Makanan');
-      setDate(initial?.date?.split('T')[0] ?? today());
+      setDate(initial?.date?.split('T')[0] ?? todayDateString());
       setNotes(initial?.notes ?? '');
     }
   }, [isOpen, initial]);
